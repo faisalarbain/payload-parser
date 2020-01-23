@@ -1,5 +1,9 @@
 const splitter = require('./splitter')
 
+const parseContent = (parsed) => {
+  return parsed.content
+}
+
 const splitAll = (string = '', result = []) => {
   if (string.length == 0) {
     return result
@@ -8,7 +12,7 @@ const splitAll = (string = '', result = []) => {
   const parsed = splitter.parse(string)
   return splitAll(parsed.remaining, [...result, {
     ID: parsed.ID,
-    content: parsed.content
+    content: parseContent(parsed)
   }])
 }
 
