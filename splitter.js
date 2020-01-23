@@ -5,7 +5,6 @@ const CONTENT_PAD_SIZE = 4
 
 module.exports = {
   parse(string) {
-
     const contentLength = getContentLength(string)
     const lastIndex = contentLength + CONTENT_PAD_SIZE
     return {
@@ -14,15 +13,14 @@ module.exports = {
       content: string.substring(4, lastIndex)
     }
   },
-  parseAll(string, result = []) {
-    const parsed = this.parse(string)
-    const remaining = string.substring(parsed.contentLength + CONTENT_PAD_SIZE)
-    const output = [...result, parsed]
-    
-    if (remaining.length == 0) {
-      return output
+
+  parseAll(string = '', result = []) {
+    if (string.length == 0) {
+      return result
     }
     
-    return this.parseAll(remaining, output)
+    const parsed = this.parse(string)
+    const remaining = string.substring(parsed.contentLength + CONTENT_PAD_SIZE)
+    return this.parseAll(remaining, [...result, parsed])
   }
 }

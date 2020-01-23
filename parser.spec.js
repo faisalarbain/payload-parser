@@ -17,4 +17,14 @@ describe('parser', function () {
       expect(() => parser.parse(SAMPLE_2)).to.not.throw()
     })
   })
+
+  describe('splits attributes', function () {
+    it('can split attributes', function () {
+      const str = '0002010101M'
+      const output = parser.parse(str)
+      expect(output).has.lengthOf(2)
+      expect(output[0].content).equal('01')
+      expect(output[1].content).equal('M')
+    })
+  })
 })
