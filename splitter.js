@@ -10,17 +10,8 @@ module.exports = {
     return {
       ID: string.substring(0,2),
       contentLength,
-      content: string.substring(4, lastIndex)
+      content: string.substring(4, lastIndex),
+      remaining: string.substring(contentLength + CONTENT_PAD_SIZE)
     }
-  },
-
-  parseAll(string = '', result = []) {
-    if (string.length == 0) {
-      return result
-    }
-    
-    const parsed = this.parse(string)
-    const remaining = string.substring(parsed.contentLength + CONTENT_PAD_SIZE)
-    return this.parseAll(remaining, [...result, parsed])
   }
 }

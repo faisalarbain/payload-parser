@@ -1,11 +1,24 @@
 const splitter = require('./splitter')
+
+const splitAll = (string = '', result = []) => {
+  if (string.length == 0) {
+    return result
+  }
+
+  const parsed = splitter.parse(string)
+  return splitAll(parsed.remaining, [...result, {
+    ID: parsed.ID,
+    content: parsed.content
+  }])
+}
+
 module.exports = {
   parse: (payload) => {
     if (payload.indexOf('00') !== 0) {
       throw "Format indicator must present as first data"
     }
 
-    return splitter.parseAll(payload)
+    return splitAll(payload)
     
   }
 }
