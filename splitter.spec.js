@@ -16,5 +16,13 @@ describe("splitter", function () {
       expect(result.content).equal(param.expectedContent)
     })
   })
+
+  it('can parse all', function () {
+    const str = '0002010101M'
+    const output = splitter.parseAll(str)
+    expect(output).has.lengthOf(2)
+    expect(output[0].content).equal('01')
+    expect(output[1].content).equal('M')
+  })
   
 })
