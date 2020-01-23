@@ -8,6 +8,7 @@ module.exports = {
     return {
       ID: string.substring(0,2),
       contentLength,
+      content: 'fooo'
     }
   }
 }
