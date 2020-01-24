@@ -83,5 +83,31 @@ describe.only('second attempt', function () {
         channelId: 'M'
       })
     })
+
+    it('throw when missing required column', function () {
+      const schema = parser.schema({
+        '00': {
+          label: 'foo',
+          type: String,
+          required: true
+        },
+        '01': {
+          label: 'bar',
+          type: String,
+        }
+      })
+
+      expect(() => schema([
+        {
+          ID: '01',
+          value: 'M'
+        }
+      ])).to.throw()
+
+      expect(() => schema([{
+        ID: '00',
+        value: 'I'
+      }])).to.not.throw()
+    })
   })
 })

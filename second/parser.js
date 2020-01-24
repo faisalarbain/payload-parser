@@ -34,9 +34,15 @@ module.exports = () => {
         
         return R.pipe(
           R.mapObjIndexed((rule, ID) => {
+            const value = rule.type(getValue(ID, rule.defaultValue))
+
+            if(rule.required && !value) {
+              throw `${ID} is required`
+            }
+            
             return {
               label: rule.label,
-              value: rule.type(getValue(ID, rule.defaultValue))
+              value,
             }
           }),
           R.values,
