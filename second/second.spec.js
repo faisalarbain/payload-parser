@@ -34,4 +34,17 @@ describe.only('second attempt', function () {
       })
     })
   })
+
+  describe('parse item', function () {
+    it('handle empty input', function () {
+      const output = parser.item()
+      expect(output).to.deep.equal({ID: '', value: ''})
+    })
+
+    it('can parse id and content', function () {
+      const output = parser.item('000201')
+      expect(output.ID).to.equal('00')
+      expect(output.value).to.equal('01')
+    })
+  })
 })

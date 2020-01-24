@@ -15,6 +15,14 @@ module.exports = () => {
       const remainingStr = str.substring(splitAt)
 
       return this.split(remainingStr, [...output, item])
+    },
+
+
+    item(str = '') {
+      return {
+        ID: str.substring(0, 2),
+        value: str.substring(4)
+      }
     }
   }
 }
