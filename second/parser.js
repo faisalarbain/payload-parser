@@ -26,7 +26,7 @@ const makeValidator = (config) => (data) => {
   )(config)
 }
 
-const valueGetter = (data) => (ID, defaultValue = '') => {
+const valueGetter = (data) => (ID, defaultValue) => {
   if (data[ID]) {
     return data[ID].value
   }
@@ -71,10 +71,14 @@ module.exports = () => {
         const validate = makeValidator(config)
         
         return R.pipe(
-          R.mapObjIndexed((rule, ID) => ({
+          R.mapObjIndexed((rule, ID) => {
+            const value = getValue(ID, rule.defaultValue)
+            return {
               label: rule.label,
-              value: rule.type(getValue(ID, rule.defaultValue)),
-          })),
+              value: value ? rule.type(value) : undefined,
+            }
+          }),
+          R.filter( data => data.value !== undefined),
           R.values,
           R.indexBy(R.prop('label')),
           R.map(R.prop('value')),

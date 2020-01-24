@@ -223,7 +223,11 @@ describe.only('second attempt', function () {
     it('able to parse sample 3', function () {
       const output = customerDataParser.parse(SAMPLE_3)
       console.log(output)
+    })
 
+    it('unprovided data should removed from final output', function () {
+      const output = customerDataParser.parse(SAMPLE_3)
+      expect(output).not.ownProperty('integrityCheck')
     })
   })
 })
