@@ -10,5 +10,9 @@ describe.only('second attempt', function () {
     it('return empty array if empty string', function () {
       expect(parser.split('')).to.deep.equal([])
     })
+
+    it('return single array', function () {
+      expect(parser.split('000201')).to.deep.equal(['000201'])
+    })
   })
 })
