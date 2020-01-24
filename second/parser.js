@@ -30,11 +30,13 @@ module.exports = () => {
     schema(config) {
       return (data) => {
         const indexedData = R.indexBy(R.prop('ID'), data)
+        const getValue = (ID, defaultValue = '') => (indexedData[ID] || { value: defaultValue }).value
+        
         return R.pipe(
           R.mapObjIndexed((rule, ID) => {
             return {
               label: rule.label,
-              value: rule.type(indexedData[ID].value)
+              value: rule.type(getValue(ID, rule.defaultValue))
             }
           }),
           R.values,

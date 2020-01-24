@@ -62,6 +62,10 @@ describe.only('second attempt', function () {
         '00': {
           label: 'formatIndicator',
           type: Number
+        },
+        '01': {
+          label: 'channelId',
+          type: String
         }
       })
 
@@ -69,9 +73,14 @@ describe.only('second attempt', function () {
         {
           ID: '00',
           value: '01'
+        },
+        {
+          ID: '01',
+          value: 'M'
         }
       ])).to.deep.equal({
-        formatIndicator: 01
+        formatIndicator: 01,
+        channelId: 'M'
       })
     })
   })
