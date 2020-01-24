@@ -41,10 +41,18 @@ describe.only('second attempt', function () {
       expect(output).to.deep.equal({ID: '', value: ''})
     })
 
-    it('can parse id and content', function () {
-      const output = parser.item('000201')
-      expect(output.ID).to.equal('00')
-      expect(output.value).to.equal('01')
+    const samples = [
+      {str: '000201', ID: '00', value:'01'},
+      {str: '0101M', ID: '01', value:'M'},
+      {str: '7802MY', ID: '78', value:'MY'},
+    ]
+    
+    samples.forEach((sample) => {
+      it(`can parse id and content for [${sample.str}]`, function () {
+        const output = parser.item(sample.str)
+        expect(output.ID).to.equal(sample.ID)
+        expect(output.value).to.equal(sample.value)
+      })
     })
   })
 })
