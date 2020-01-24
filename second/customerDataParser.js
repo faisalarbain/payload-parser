@@ -1,7 +1,7 @@
 const R = require('ramda')
 const parser = require('./parser')()
 
-const nricOrPassport = (data) => {
+const nricOrPassportValidation = (data) => {
   if (data.nric && data.passport) {
     return false
   }
@@ -9,7 +9,7 @@ const nricOrPassport = (data) => {
   return !!data.nric || !!data.passport
 }
 
-const parse = (schema) => R.pipe(
+const parsePayload = (schema) => R.pipe(
   parser.split,
   R.map(parser.item),
   schema
@@ -47,12 +47,12 @@ const CustomerPersonalDetails = parser.schema({
   '02': {
     label: 'nric',
     type: Number,
-    validate: nricOrPassport
+    validate: nricOrPassportValidation
   },
   '03': {
     label: 'passport',
     type: Number,
-    validate: nricOrPassport
+    validate: nricOrPassportValidation
   },
 })
 
@@ -69,7 +69,7 @@ const CustomerData = parser.schema({
   },
   '12': {
     label: 'customerAccountInformation',
-    type: parse(AccountInformation),
+    type: parsePayload(AccountInformation),
     required: true,
   },
   '04': {
@@ -80,7 +80,7 @@ const CustomerData = parser.schema({
   },
   '07': {
     label: 'customerPersonalDetails',
-    type: parse(CustomerPersonalDetails),
+    type: parsePayload(CustomerPersonalDetails),
     required: true,
   },
   '78': {
@@ -99,11 +99,21 @@ const CustomerData = parser.schema({
   },
 })
 
+const parseCustomerData = parsePayload(CustomerData)
+
+const payloadPrecondition = (str) => {
+  if (str.indexOf('00') !== 0) {
+    throw "formatIndicator should present as the first data payload"
+  }
+
+  return str
+}
+
+
+
 module.exports = {
-  parse: (str) => {
-    if (str.indexOf('00') !== 0) {
-      throw "formatIndicator should present as the first data payload"
-    }
-    return parse(CustomerData)(str)
-  },
+  parse: R.pipe(
+    payloadPrecondition,
+    parseCustomerData
+  )
 }
