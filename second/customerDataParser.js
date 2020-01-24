@@ -100,5 +100,10 @@ const CustomerData = parser.schema({
 })
 
 module.exports = {
-  parse: parse(CustomerData),
+  parse: (str) => {
+    if (str.indexOf('00') !== 0) {
+      throw "formatIndicator should present as the first data payload"
+    }
+    return parse(CustomerData)(str)
+  },
 }

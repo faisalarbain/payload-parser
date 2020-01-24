@@ -211,5 +211,19 @@ describe.only('second attempt', function () {
       const sample = '0101I040412347802MY12340010James_Bond0102020210888866666699055000007330004Bond0105James0212770707148888000201'
       expect(() => customerDataParser.parse(sample)).to.throw()
     })
+
+    it('throw error for sample 1', function () {
+      expect(() => customerDataParser.parse(SAMPLE_1)).to.throw(/formatIndicator/)
+    })
+
+    it('throw error for sample 2', function () {
+      expect(() => customerDataParser.parse(SAMPLE_2)).to.throw().with.property('errors').deep.equal(['nric','passport'])
+    })
+
+    it('able to parse sample 3', function () {
+      const output = customerDataParser.parse(SAMPLE_3)
+      console.log(output)
+
+    })
   })
 })
