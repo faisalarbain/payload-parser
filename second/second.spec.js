@@ -1,4 +1,4 @@
-const parser = require('./parser')
+const parser = require('./parser')()
 const expect = require('chai').expect
 
 describe.only('second attempt', function () {
