@@ -2,6 +2,21 @@ const R = require('ramda')
 const parser = require('./parser')()
 const schema = require('./Schema')
 
+const accountTypes = {
+  '01': 'Savings',
+  '02': 'Current',
+  '03': 'HP',
+  '04': 'Loan'
+}
+
+const AccountType = (value) => {
+  if (!accountTypes[value]) {
+    throw `Invalid Account Type [${value}]`
+  }
+
+  return accountTypes[value]
+}
+
 const nricOrPassportValidation = (data) => {
   if (data.nric && data.passport) {
     return false
@@ -24,7 +39,7 @@ const AccountInformation = schema({
   },
   '01': {
     label: 'accountType',
-    type: String,
+    type: AccountType,
     required: true
   },
   '02': {
