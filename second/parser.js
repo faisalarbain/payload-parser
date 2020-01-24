@@ -29,15 +29,18 @@ module.exports = () => {
 
     schema(config) {
       return (data) => {
+        const indexedData = R.indexBy(R.prop('ID'), data)
         return R.pipe(
-          R.map(
-            item => ({...item, ...config[item.ID]})
-          ),
+          R.mapObjIndexed((rule, ID) => {
+            return {
+              label: rule.label,
+              value: rule.type(indexedData[ID].value)
+            }
+          }),
+          R.values,
           R.indexBy(R.prop('label')),
-          R.map(item => {
-            return item.type(item.value)
-          })
-        )(data)
+          R.map(R.prop('value'))
+        )(config)
       }
     }
   }
