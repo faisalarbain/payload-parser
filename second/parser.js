@@ -34,18 +34,21 @@ const valueGetter = (data) => (ID, defaultValue) => {
   return defaultValue
 }
 
-const split = (config, str, output = []) => {
-  if (!str) {
-    return output
+const splitter = (config) => {
+  const split = (str, output = []) => {
+    if (!str) {
+      return output
+    }
+
+    const size = parseInt(str.substring(config.sizeStart, config.sizeEnd))
+    const splitAt = size + config.sizeEnd
+    const item = str.substring(0, splitAt)
+    const remainingStr = str.substring(splitAt)
+
+    return split(remainingStr, [...output, item])
   }
 
-  const size = parseInt(str.substring(config.sizeStart, config.sizeEnd))
-  const splitAt = size + config.sizeEnd
-  const item = str.substring(0, splitAt)
-  const remainingStr = str.substring(splitAt)
-
-
-  return split(config, remainingStr, [...output, item])
+  return split
 }
 
 module.exports = () => {
@@ -53,41 +56,36 @@ module.exports = () => {
     sizeStart: 2,
     sizeEnd: 4
   }
+
   return {
-    split(str) {
-      return split(config, str)
-    },
+    split: splitter(config),
 
-    item(str = '') {
-      return {
-        ID: str.substring(0, 2),
-        value: str.substring(4)
-      }
-    },
+    item: (str = '') => ({
+      ID: str.substring(0, 2),
+      value: str.substring(4)
+    }),
 
-    schema(config) {
-      return (data) => {
-        const getValue = valueGetter(R.indexBy(R.prop('ID'), data))
-        const validate = makeValidator(config)
-        
-        return R.pipe(
-          R.mapObjIndexed((rule, ID) => {
-            const value = getValue(ID, rule.defaultValue)
-            return {
-              label: rule.label,
-              value: value ? rule.type(value) : undefined,
-            }
-          }),
-          R.filter( data => data.value !== undefined),
-          R.values,
-          R.indexBy(R.prop('label')),
-          R.map(R.prop('value')),
-          data => {
-            validate(data)
-            return data
-          }
-        )(config)
-      }
+    schema: (rules) => (data) => {
+      const validate = makeValidator(rules)
+      const getValue = valueGetter(R.indexBy(R.prop('ID'), data))
+      const process = R.pipe(
+        R.mapObjIndexed((rule, ID) => ({
+          ID,
+          label: rule.label,
+          value: rule.defaultValue,
+          type: rule.type,
+        })),
+        R.values,
+        R.indexBy(R.prop('label')),
+        R.filter(data => getValue(data.ID, data.value)),
+        R.map(data => data.type(getValue(data.ID, data.value))),
+        data => {
+          validate(data)
+          return data
+        }
+      )
+
+      return process(rules)
     }
   }
 }
