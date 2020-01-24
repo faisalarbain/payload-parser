@@ -1,9 +1,13 @@
 const R = require('ramda')
 
+const requiredValidator = (label) => (data) => !!data[label] 
 
 const makeValidator = (config) => (data) => {
   return R.pipe(
-    R.filter(data => data),
+    R.map((rule) => R.allPass([
+      rule.required ? requiredValidator(rule.label) : R.always(true),
+      rule.validate || R.always(true)
+    ])),
     R.map((validator) => {
       return validator(data)
     }),
@@ -15,6 +19,14 @@ const makeValidator = (config) => (data) => {
       }
     }
   )(config)
+}
+
+const valueGetter = (data) => (ID, defaultValue = '') => {
+  if (data[ID]) {
+    return data[ID].value
+  }
+
+  return defaultValue
 }
 
 module.exports = () => {
@@ -46,22 +58,14 @@ module.exports = () => {
 
     schema(config) {
       return (data) => {
-        const indexedData = R.indexBy(R.prop('ID'), data)
-        const getValue = (ID, defaultValue = '') => (indexedData[ID] || { value: defaultValue }).value
-        const validate = makeValidator(R.pluck('validate', config))
+        const getValue = valueGetter(R.indexBy(R.prop('ID'), data))
+        const validate = makeValidator(config)
+        
         return R.pipe(
-          R.mapObjIndexed((rule, ID) => {
-            const value = rule.type(getValue(ID, rule.defaultValue))
-
-            if(rule.required && !value) {
-              throw `${ID} is required`
-            }
-
-            return {
+          R.mapObjIndexed((rule, ID) => ({
               label: rule.label,
-              value,
-            }
-          }),
+              value: rule.type(getValue(ID, rule.defaultValue)),
+          })),
           R.values,
           R.indexBy(R.prop('label')),
           R.map(R.prop('value')),
