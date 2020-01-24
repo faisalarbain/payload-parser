@@ -179,6 +179,27 @@ describe.only('second attempt', function () {
       }, {
         ID: '02',
         value: '850111-12-2233'
+        }])).to.throw()
+      
+      expect(() => schema([{
+        ID: '00',
+        value: '01'
+      },{
+        ID: '02',
+        value: '850111-12-2233'
+      }])).to.not.throw()
+      
+      expect(() => schema([{
+        ID: '00',
+        value: '01'
+      }, {
+        ID: '02',
+        value: '850111-12-2233'
+      }])).to.not.throw()
+      
+      expect(() => schema([{
+        ID: '00',
+        value: '01'
       }])).to.throw()
     })
   })
