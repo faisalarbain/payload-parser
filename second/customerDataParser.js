@@ -3,18 +3,23 @@ const parser = require('./parser')()
 const schema = require('./Schema')
 
 const accountTypes = {
-  '01': 'Savings',
-  '02': 'Current',
-  '03': 'HP',
-  '04': 'Loan'
+  '01': '01 - Savings',
+  '02': '02 - Current',
+  '03': '03 - HP',
+  '04': '04 - Loan'
 }
 
-const AccountType = (value) => {
-  if (!accountTypes[value]) {
-    throw `Invalid Account Type [${value}]`
+const channels = {
+  I: 'I - Internet Banking',
+  M: 'M - Mobile Banking'
+}
+
+const Enum = (mappings = {}, label = 'value') => (value) => {
+  if (!mappings[value]) {
+    throw `Invalid ${label} [${value}]`
   }
 
-  return accountTypes[value]
+  return mappings[value]
 }
 
 const nricOrPassportValidation = (data) => {
@@ -39,7 +44,7 @@ const AccountInformation = schema({
   },
   '01': {
     label: 'accountType',
-    type: AccountType,
+    type: Enum(accountTypes, 'accountType'),
     required: true
   },
   '02': {
@@ -80,7 +85,7 @@ const CustomerData = schema({
   },
   '01': {
     label: 'channelId',
-    type: String,
+    type: Enum(channels, 'channelId'),
     required: true,
   },
   '12': {
