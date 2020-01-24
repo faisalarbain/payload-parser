@@ -20,13 +20,21 @@ describe.only('second attempt', function () {
     })
 
     it('can split into 2 item', function () {
-      expect(parser.split('0002010101M')).to.deep.equal(['000201','0101M'])
+      expect(parser.split('0002010101M')).to.deep.equal(['000201', '0101M'])
     })
 
-    const allSamples = [
-      { str: SAMPLE_1, expected: 6 },
-      { str: SAMPLE_2, expected: 7 },
-      { str: SAMPLE_3, expected: 7 },
+    const allSamples = [{
+        str: SAMPLE_1,
+        expected: 6
+      },
+      {
+        str: SAMPLE_2,
+        expected: 7
+      },
+      {
+        str: SAMPLE_3,
+        expected: 7
+      },
     ]
     allSamples.forEach((sample, i) => {
       it(`can split sample ${i}`, function () {
@@ -38,15 +46,29 @@ describe.only('second attempt', function () {
   describe('parse item', function () {
     it('handle empty input', function () {
       const output = parser.item()
-      expect(output).to.deep.equal({ID: '', value: ''})
+      expect(output).to.deep.equal({
+        ID: '',
+        value: ''
+      })
     })
 
-    const samples = [
-      {str: '000201', ID: '00', value:'01'},
-      {str: '0101M', ID: '01', value:'M'},
-      {str: '7802MY', ID: '78', value:'MY'},
+    const samples = [{
+        str: '000201',
+        ID: '00',
+        value: '01'
+      },
+      {
+        str: '0101M',
+        ID: '01',
+        value: 'M'
+      },
+      {
+        str: '7802MY',
+        ID: '78',
+        value: 'MY'
+      },
     ]
-    
+
     samples.forEach((sample) => {
       it(`can parse id and content for [${sample.str}]`, function () {
         const output = parser.item(sample.str)
@@ -69,8 +91,7 @@ describe.only('second attempt', function () {
         }
       })
 
-      expect(fooSchema([
-        {
+      expect(fooSchema([{
           ID: '00',
           value: '01'
         },
@@ -97,17 +118,68 @@ describe.only('second attempt', function () {
         }
       })
 
-      expect(() => schema([
-        {
-          ID: '01',
-          value: 'M'
-        }
-      ])).to.throw()
+      expect(() => schema([{
+        ID: '01',
+        value: 'M'
+      }])).to.throw()
 
       expect(() => schema([{
         ID: '00',
         value: 'I'
       }])).to.not.throw()
+    })
+
+    it('can parse value', function () {
+      const mainSchema = parser.schema({
+        '12': {
+          label: 'name',
+          type: (value) => value.replace(/_/g, ' ')
+        }
+      })
+
+      expect(mainSchema([{
+        ID: '12',
+        value: 'John_Doe'
+      }])).to.deep.equal({
+        name: 'John Doe'
+      })
+    })
+
+    it('can add custom validation', function () {
+      const passportOrNric = (data) => {
+        if (data.passport && data.nric) {
+          return false
+        }
+
+        return !!data.passport || !!data.nric
+      }
+      const schema = parser.schema({
+        '00': {
+          label: 'foo',
+          type: Number
+        },
+        '01': {
+          label: 'passport',
+          type: String,
+          validate: passportOrNric
+        },
+        '02': {
+          label: 'nric',
+          type: String,
+          validate: passportOrNric
+        }
+      })
+
+      expect(() => schema([{
+        ID: '00',
+        value: '01'
+      }, {
+        ID: '01',
+        value: '012345678'
+      }, {
+        ID: '02',
+        value: '850111-12-2233'
+      }])).to.throw()
     })
   })
 })

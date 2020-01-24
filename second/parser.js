@@ -1,5 +1,22 @@
 const R = require('ramda')
 
+
+const makeValidator = (config) => (data) => {
+  return R.pipe(
+    R.filter(data => data),
+    R.map((validator) => {
+      return validator(data)
+    }),
+    R.filter(data => !data),
+    R.keys,
+    errors => {
+      if (errors.length > 0) {
+        throw `Validation failed ${errors.join(', ')}`
+      }
+    }
+  )(config)
+}
+
 module.exports = () => {
   const config = {
     sizeStart: 2,
@@ -31,7 +48,7 @@ module.exports = () => {
       return (data) => {
         const indexedData = R.indexBy(R.prop('ID'), data)
         const getValue = (ID, defaultValue = '') => (indexedData[ID] || { value: defaultValue }).value
-        
+        const validate = makeValidator(R.pluck('validate', config))
         return R.pipe(
           R.mapObjIndexed((rule, ID) => {
             const value = rule.type(getValue(ID, rule.defaultValue))
@@ -39,7 +56,7 @@ module.exports = () => {
             if(rule.required && !value) {
               throw `${ID} is required`
             }
-            
+
             return {
               label: rule.label,
               value,
@@ -47,7 +64,11 @@ module.exports = () => {
           }),
           R.values,
           R.indexBy(R.prop('label')),
-          R.map(R.prop('value'))
+          R.map(R.prop('value')),
+          data => {
+            validate(data)
+            return data
+          }
         )(config)
       }
     }
