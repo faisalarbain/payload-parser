@@ -55,4 +55,24 @@ describe.only('second attempt', function () {
       })
     })
   })
+
+  describe('schema', function () {
+    it('can create schema parser', function () {
+      const fooSchema = parser.schema({
+        '00': {
+          label: 'formatIndicator',
+          type: Number
+        }
+      })
+
+      expect(fooSchema([
+        {
+          ID: '00',
+          value: '01'
+        }
+      ])).to.deep.equal({
+        formatIndicator: 01
+      })
+    })
+  })
 })

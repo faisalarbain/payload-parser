@@ -1,3 +1,5 @@
+const R = require('ramda')
+
 module.exports = () => {
   const config = {
     sizeStart: 2,
@@ -22,6 +24,20 @@ module.exports = () => {
       return {
         ID: str.substring(0, 2),
         value: str.substring(4)
+      }
+    },
+
+    schema(config) {
+      return (data) => {
+        return R.pipe(
+          R.map(
+            item => ({...item, ...config[item.ID]})
+          ),
+          R.indexBy(R.prop('label')),
+          R.map(item => {
+            return item.type(item.value)
+          })
+        )(data)
       }
     }
   }
