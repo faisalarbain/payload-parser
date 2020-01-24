@@ -1,8 +1,8 @@
 module.exports = {
-  split(str) {
+  split(str, output = []) {
     if (!str) {
-      return []
+      return output
     }
-    return [str]
+    return [...output, str]
   }
 }

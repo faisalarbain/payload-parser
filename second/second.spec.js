@@ -15,7 +15,7 @@ describe.only('second attempt', function () {
       expect(parser.split('000201')).to.deep.equal(['000201'])
     })
 
-    it('can split into 2 item', function () {
+    it.skip('can split into 2 item', function () {
       expect(parser.split('0002010101M')).to.deep.equal(['000201','0101M'])
     })
   })
