@@ -15,18 +15,17 @@ const splitter = (config) => {
   return split
 }
 
-module.exports = () => {
-  const config = {
+module.exports = (config = {
     sizeStart: 2,
     sizeEnd: 4
-  }
+  }) => {
 
   return {
     split: splitter(config),
 
     item: (str = '') => ({
-      ID: str.substring(0, 2),
-      value: str.substring(4)
+      ID: str.substring(0, config.sizeStart),
+      value: str.substring(config.sizeEnd)
     })
   }
 }
