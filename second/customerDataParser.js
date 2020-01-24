@@ -1,5 +1,6 @@
 const R = require('ramda')
 const parser = require('./parser')()
+const schema = require('./Schema')
 
 const nricOrPassportValidation = (data) => {
   if (data.nric && data.passport) {
@@ -15,7 +16,7 @@ const parsePayload = (schema) => R.pipe(
   schema
 )
 
-const AccountInformation = parser.schema({
+const AccountInformation = schema({
   '00': {
     label: 'accountHolderName',
     type: String,
@@ -33,7 +34,7 @@ const AccountInformation = parser.schema({
   },
 })
 
-const CustomerPersonalDetails = parser.schema({
+const CustomerPersonalDetails = schema({
   '00': {
     label: 'surname',
     type: String,
@@ -56,7 +57,7 @@ const CustomerPersonalDetails = parser.schema({
   },
 })
 
-const CustomerData = parser.schema({
+const CustomerData = schema({
   '00': {
     label: 'formatIndicator',
     type: Number,

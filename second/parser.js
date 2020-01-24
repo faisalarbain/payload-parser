@@ -27,8 +27,6 @@ module.exports = () => {
     item: (str = '') => ({
       ID: str.substring(0, 2),
       value: str.substring(4)
-    }),
-
-    schema: require('./Schema')
+    })
   }
 }

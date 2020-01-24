@@ -1,4 +1,5 @@
 const parser = require('./parser')()
+const Schema = require('./Schema')
 const expect = require('chai').expect
 
 const customerDataParser = require('./customerDataParser')
@@ -82,7 +83,7 @@ describe.only('second attempt', function () {
 
   describe('schema', function () {
     it('can create schema parser', function () {
-      const fooSchema = parser.schema({
+      const fooSchema = Schema({
         '00': {
           label: 'formatIndicator',
           type: Number
@@ -108,7 +109,7 @@ describe.only('second attempt', function () {
     })
 
     it('throw when missing required column', function () {
-      const schema = parser.schema({
+      const schema = Schema({
         '00': {
           label: 'foo',
           type: String,
@@ -132,7 +133,7 @@ describe.only('second attempt', function () {
     })
 
     it('can parse value', function () {
-      const mainSchema = parser.schema({
+      const mainSchema = Schema({
         '12': {
           label: 'name',
           type: (value) => value.replace(/_/g, ' ')
@@ -155,7 +156,7 @@ describe.only('second attempt', function () {
 
         return !!data.passport || !!data.nric
       }
-      const schema = parser.schema({
+      const schema = Schema({
         '00': {
           label: 'foo',
           type: Number
