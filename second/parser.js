@@ -15,7 +15,7 @@ const splitter = (config) => {
   return split
 }
 
-module.exports = (config = {
+export default (config = {
     sizeStart: 2,
     sizeEnd: 4
   }) => {

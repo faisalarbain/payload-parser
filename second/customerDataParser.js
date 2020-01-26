@@ -1,6 +1,8 @@
-const R = require('ramda')
-const parser = require('./parser')()
-const schema = require('./Schema')
+import * as R from 'ramda'
+import Parser from './parser'
+import schema from './Schema'
+
+const parser = Parser()
 
 const accountTypes = {
   '01': '01 - Savings',

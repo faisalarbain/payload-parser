@@ -1,4 +1,4 @@
-const R = require('ramda')
+import * as R from 'ramda'
 
 const requiredValidator = (label) => (data) => !!data[label]
 
@@ -34,7 +34,7 @@ const valueGetter = (data) => (ID, defaultValue) => {
   return defaultValue
 }
 
-module.exports = (rules) => (data) => {
+export default (rules) => (data) => {
   const validate = makeValidator(rules)
   const getValue = valueGetter(R.indexBy(R.prop('ID'), data))
   const process = R.pipe(

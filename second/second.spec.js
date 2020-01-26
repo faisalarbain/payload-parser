@@ -1,8 +1,9 @@
-const parser = require('./parser')()
-const Schema = require('./Schema')
-const expect = require('chai').expect
+import {expect} from 'chai'
+import Parser from './parser'
+import Schema from './Schema'
+import customerDataParser from './customerDataParser'
 
-const customerDataParser = require('./customerDataParser')
+const parser = Parser()
 
 const SAMPLE_1 = '0101I040412347802MY12320010James_Bond01020202108888666699055000007330004Bond0105James0212770707148888'
 const SAMPLE_2 = '0002010101I040412347802MY12320010James_Bond01020202108888666699055000007330004Bond0105James'
@@ -103,7 +104,7 @@ describe.only('second attempt', function () {
           value: 'M'
         }
       ])).to.deep.equal({
-        formatIndicator: 01,
+        formatIndicator: 1,
         channelId: 'M'
       })
     })
