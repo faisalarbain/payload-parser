@@ -4,13 +4,18 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha ./**"
+    "test": "mocha ./**",
+    "demo": "nuxt -s poc"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bulma": "^0.8.0",
     "chai": "^4.2.0",
     "mocha": "^7.0.0",
-    "ramda": "^0.26.1"
+    "node-sass": "^4.13.1",
+    "nuxt": "^2.11.0",
+    "ramda": "^0.26.1",
+    "sass-loader": "^8.0.2"
   }
 }
