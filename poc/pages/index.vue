@@ -1,8 +1,8 @@
 <template>
   <div>
     <h1 class="title">Customer Data Parser Demo</h1>
-    <div class="columns">
-      <div class="column is-6">
+    <div class="columns is-multiline">
+      <div class="column is-12">
         <form @submit.prevent="submit">
           <label for="payload" class="label">Payload</label>
           <div class="field has-addons">
@@ -14,8 +14,8 @@
             </div>
           </div>
         </form>
-
-        <hr>
+      </div>
+      <div class="column is-6">
         <h3 class="title is-5">Samples</h3>
         <template v-for="(sample,i) in samples">
           <a @click="form.payload = sample" :key="i" class="box" style="overflow-wrap:break-word">
@@ -27,6 +27,7 @@
 
       <div class="column is-6">
         <div class="box">
+          <h3 class="title is-5">Output</h3>
           <json-tree v-if="parsed" :data="parsed" />
           <div v-if="error" class="notification is-danger is-light">
             {{ error.message }}
@@ -36,6 +37,12 @@
             Enter payload data or pick from samples
           </div>
         </div>
+      </div>
+    </div>
+
+    <div class="navbar is-fixed-bottom is-transparent" style="background: none;">
+      <div class="has-text-centered" style="width: 100%;">
+        <a target="_BLANK" href="https://github.com/faisalarbain/payload-parser">Source code</a>
       </div>
     </div>
   </div>
