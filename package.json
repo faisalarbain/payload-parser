@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha --require babel-register ./**",
-    "demo": "nuxt -s poc"
+    "demo": "nuxt dev",
+    "build": "nuxt generate",
+    "deploy": "now"
   },
   "author": "",
   "license": "ISC",
