@@ -134,7 +134,7 @@ const payloadPrecondition = (str) => {
 
 
 
-module.exports = {
+export default {
   parse: R.pipe(
     payloadPrecondition,
     parseCustomerData
