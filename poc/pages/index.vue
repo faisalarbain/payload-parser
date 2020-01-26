@@ -29,7 +29,11 @@
         <div class="box">
           <json-tree v-if="parsed" :data="parsed" />
           <div v-if="error" class="notification is-danger is-light">
-            {{ error }}
+            {{ error.message }}
+          </div>
+          <div v-if="!parsed && !error" class="notification">
+            <span class="heading">Instruction</span>
+            Enter payload data or pick from samples
           </div>
         </div>
       </div>
@@ -70,7 +74,9 @@ export default {
       this.$store.dispatch('parser/parse', this.form.payload).then(() => {
         this.clearInput()
       }).catch(err => {
-        this.error = err.message || err
+        this.error = err.message ? err : {
+          message: err
+        }
       })
     }
   }
