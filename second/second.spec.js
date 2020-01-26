@@ -149,6 +149,33 @@ describe.only('second attempt', function () {
       })
     })
 
+    it('can add default value', function () {
+      const mainSchema = Schema({
+        '00': {
+          label: 'mandatory',
+          type: Number,
+          required: true
+        },
+        '04': {
+          label: 'customerCategoryCode',
+          type: String,
+          defaultValue: '0000',
+          required: true,
+        }
+      })
+
+      expect(() => {
+        const output = mainSchema([{
+          ID: '00',
+          value: '01'
+        }])
+
+        expect(output.customerCategoryCode).equal('0000')
+      }).to.not.throw()
+
+      
+    })
+
     it('can add custom validation', function () {
       const passportOrNric = (data) => {
         if (data.passport && data.nric) {

@@ -97,7 +97,7 @@ const CustomerData = schema({
   },
   '04': {
     label: 'customerCategoryCode',
-    type: Number,
+    type: String,
     required: true,
     defaultValue: '0000',
   },
